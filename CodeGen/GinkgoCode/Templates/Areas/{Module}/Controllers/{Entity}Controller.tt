@@ -1,0 +1,50 @@
+﻿<#@ template language="C#" hostSpecific="true" debug="false" #>
+<#@ output extension=".cs" #>
+<# 
+	EntityHost host = (EntityHost)(Host); 
+	EntityInfo entity = host.Entity;	
+	string nameSpace = host.GetString("NameSpace");
+	string className = host.GetString("ClassName");	
+	string camelClassName = StringHelper.InitialToLower(className);
+	string moduleName = host.GetString("ModuleName");
+	string baseNameSpace = host.GetString("BaseNameSpace");	
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Abp.Application.Services.Dto;
+using <#= nameSpace #>;
+using <#= nameSpace #>.Dto;
+using <#= baseNameSpace #>.Controllers;
+using <#= baseNameSpace #>.Web.Areas.<#= moduleName #>.Models;
+namespace <#= baseNameSpace #>.Web.Mvc.Areas.<#= moduleName #>.Controllers
+{
+	[Area("<#= moduleName #>")]
+    public class <#= className #>Controller : GinkgoControllerBase
+    {
+        private readonly I<#= className #>AppService _<#= camelClassName #>AppService;
+        public <#= className #>Controller(I<#= className #>AppService <#= camelClassName #>AppService)
+        {
+            _<#= camelClassName #>AppService = <#= camelClassName #>AppService;
+        }
+        public IActionResult Index()
+        {
+            return View("Index");
+        }
+        public IActionResult Add()
+        {            
+            return View("_AddModal");
+        }
+        public async Task<IActionResult> Edit(int id)
+        {
+            var <#= camelClassName #> = await _<#= camelClassName #>AppService.Get(new EntityDto<int> { Id = id });
+            var vmModel = new <#= className #>ViewModel
+            {
+                <#= className #>=<#= camelClassName #>
+            };
+            return View("_EditModal", vmModel);
+        }
+    }
+}

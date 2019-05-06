@@ -1,0 +1,114 @@
+﻿<#@ template language="C#" hostSpecific="true" debug="false" #><#@ output extension=".js" #><# 
+	EntityHost host = (EntityHost)(Host); 
+	EntityInfo entity = host.Entity;	
+	string nameSpace = host.GetString("NameSpace");
+	string className = host.GetString("ClassName");	
+	string camelClassName = StringHelper.InitialToLower(className);
+	string moduleName = host.GetString("ModuleName");
+	string baseNameSpace = host.GetString("BaseNameSpace");	
+	List<string> excludeFields = new List<string> { "Id", "TenantId", "Creator", "CreationTime", "IsDeleted", "Deleter", "DeletionTime", "LastModifier", "LastModificationTime" };
+#>
+(function () {
+    $(function () {
+        var _dataService = abp.services.app.<#= camelClassName #>;
+        var _$form = $('form[name=QueryForm]');
+        var tableHeight = $(window).height() - 350;       
+
+        $('#btnQuery').click(function (e) {
+            e.preventDefault();
+            queryList();
+        });
+
+        function queryList() {
+            var queryDto = _$form.serializeFormToObject();
+            _dataService.query(queryDto).done(function (data) {
+                BindTable_100(data);
+            });
+        }
+        $.setTableColumnSearchInput('table_100');        
+        queryList();
+        function BindTable_100(data) {
+            var table_100 = $('#table_100').DataTable({
+                data: data,
+                destroy: true,
+                searching: true,
+                dom: '<"toolbar-add">Bftir',
+                language: $.getDataTableLang(),
+                buttons: $.getDataTableButtons(),
+                deferRender: true,
+                scrollY: tableHeight,  
+                scrollX: true,
+                scrollCollapse: true,
+                scroller: true,
+                columnDefs: [{ targets: '_all', width:'100px' }],
+                columns: [
+					{
+                        orderable: false,
+                        bSortable: false,
+                        data: "id",
+                        width: '40px',
+                        render: function (data, type, row, meta) {
+                               return $.getColumnEdit('edit-<#= camelClassName #>',data,null,abp.appPath + '<#= moduleName #>/<#= className #>/Edit?id=' + data );                            
+                        }
+                    },<# foreach (FieldInfo c in entity.Fields){
+												if(!excludeFields.Contains(c.Name)) {
+													if(c.ShortTypeName.ToLower().Contains("bool")){#>
+					{ data: '<#= StringHelper.InitialToLower(c.Name) #>',render: function (data, type, row, meta) { return $.getColumnCheck(data); }},	<# } 
+													else if (c.ShortTypeName.ToLower().Contains("datetime")){ #>
+					{ data: '<#= StringHelper.InitialToLower(c.Name) #>',render: function (data, type, row, meta) { return $.getDateString(data, 10); }}, //length equals 10 or 16	<# }
+													else {#>
+					{ data: '<#= StringHelper.InitialToLower(c.Name) #>' },<# }}} #> 
+					{
+                        orderable: false,
+                        bSortable: false,
+                        data: "id",
+                        width: '40px',
+                        render: function (data, type, row, meta) {
+                            return $.getColumnDelete('delete-<#= camelClassName #>',data,'creationTime:'+$.getDateString(row.creationTime, 16) ); //data-code need to change the key info desc
+                        }
+                    },
+					{ data: 'lastModifier' },
+                    { data: 'lastModificationTime', render: function (data, type, row, meta) { return $.getDateString(data, 16); }},
+					{ data: 'creator' },
+                    { data: 'creationTime', render: function (data, type, row, meta) { return $.getDateString(data, 16); }}
+                ],
+                initComplete: function () {                   
+                    $.setTableSelectedRowsCss('table_100');
+                    $.bindTableColumnSearchEvent('table_100');
+                    $.resetTableColumnSearchInput('table_100');
+                    $.fixDataTableHeight('table_100', tableHeight);
+					$.setAddButton('add-<#= camelClassName #>', null);
+					bindAddEvent();
+                },
+                drawCallback: function () {                    
+                    bindDeleteEvent();
+                }
+            });
+        } 
+
+		function bindAddEvent() {
+			$('.add-<#= camelClassName #>').click(function (e) {
+				e.preventDefault();
+				location.href = abp.appPath + '<#= moduleName #>/<#= className #>/Add';           
+			});   
+        }
+
+        function bindDeleteEvent() {
+            $('.delete-<#= camelClassName #>').off('click').on('click',function (e) {
+                e.preventDefault();
+                var id = $(this).attr("data-id");
+                var code = $(this).attr("data-code");
+                abp.message.confirm(
+                    $.deleteConfirm(code),
+                    function (isConfirmed) {
+                        if (isConfirmed) {
+                            _dataService.delete({ id: id }).done(function () {
+                                queryList();
+                            });
+                        }
+                    }
+                );
+            });
+        }
+    });
+})(jQuery);

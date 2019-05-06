@@ -1,0 +1,91 @@
+﻿<#@ template language="C#" hostSpecific="true" debug="false" #>
+<#@ output extension=".cshtml" #>
+<# 
+	EntityHost host = (EntityHost)(Host); 
+	EntityInfo entity = host.Entity;	
+	string nameSpace = host.GetString("NameSpace");
+	string className = host.GetString("ClassName");	
+	string camelClassName = StringHelper.InitialToLower(className);
+	string moduleName = host.GetString("ModuleName");
+	string baseNameSpace = host.GetString("BaseNameSpace");	
+	List<string> excludeFields = new List<string> { "Id", "TenantId", "Creator", "CreationTime", "IsDeleted", "Deleter", "DeletionTime", "LastModifier", "LastModificationTime" };
+#>
+@using <#= baseNameSpace #>.Web.Startup
+@using <#= baseNameSpace #>
+@using <#= baseNameSpace #>.Web.Views.Shared.Components.DatePicker
+@using <#= baseNameSpace #>.Web.Views.Shared.Components.CommonModal
+@{
+    ViewData["Title"] = "<#= StringHelper.ToPlural(className) #>";
+    ViewBag.CurrentPageName = "<#= moduleName #>.<#= className #>";
+}
+@section scripts
+    {
+    <environment names="Development">
+        <script src="~/view-resources/<#= moduleName #>/<#= className #>/Index.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/view-resources/<#= moduleName #>/<#= className #>/Index.min.js" asp-append-version="true"></script>
+    </environment>
+}
+
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    @L("<#= StringHelper.ToPlural(className) #>")
+                </h2>
+                <form name="QueryForm" role="form" novalidate class="form-validation form-horizontal">
+                    <div class="form-group">                       
+                        <label class="col-md-2 control-label">@L("CreationTime")</label>
+                        <div class="col-md-2" style="min-width:120px;">
+                            @await Component.InvokeAsync(typeof(DatePickerViewComponent), new { tagName = "FromDate", value = @DateTime.Now.AddMonths(-1).ToShortDateString() })
+                        </div>
+                        <label class="col-md-1 control-label" style="text-align:center;max-width:30px;">@L("To")</label>
+                        <div class="col-md-2" style="min-width:120px;">
+                            @await Component.InvokeAsync(typeof(DatePickerViewComponent), new { tagName = "ToDate", value = @DateTime.Now.ToShortDateString() })
+                        </div>
+                        <div class="col-md-2" style="width:80px;">
+                            <button type="button" id="btnQuery" class="btn btn-xs btn-info waves-effect m-l-20 m-t-5"><i class="small material-icons">search</i></button>
+                        </div>                      
+                    </div>
+                </form>
+            </div>
+            <div class="m-l-15 m-r-15">
+                <table id="table_100" class="table table-condensed table-bordered" style="min-width:100%;">
+                    <thead>
+                        <tr>							
+							<th>@L("Edit")</th><# foreach (FieldInfo c in entity.Fields)
+							{if(!excludeFields.Contains(c.Name)) {#>
+							<th>@L("<#= c.Name #>")</th><# }} #> 
+							<th>@L("Delete")</th>
+							<th>@L("LastModifier")</th>
+							<th>@L("LastModificationTime")</th>
+							<th>@L("Creator")</th>
+                            <th style="min-width:90px;">@L("CreationTime")</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>							
+							<th>@L("Edit")</th><# foreach (FieldInfo c in entity.Fields)
+							{if(!excludeFields.Contains(c.Name)) {#>
+							<th>@L("<#= c.Name #>")</th><# }} #> 
+							<th>@L("Delete")</th>
+							<th>@L("LastModifier")</th>
+							<th>@L("LastModificationTime")</th>
+							<th>@L("Creator")</th>
+                            <th style="min-width:90px;">@L("CreationTime")</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

@@ -3,3 +3,10 @@
 ################################################################################
 
 /.vs/GinkgoCode/v15/.suo
+/.vs
+/GinkgoCode/bin/Debug
+/GinkgoCode/obj
+/CodeGen/bin/Debug
+/CodeGen/obj/Debug
+/CodeVsix/bin/Debug
+/CodeVsix/obj

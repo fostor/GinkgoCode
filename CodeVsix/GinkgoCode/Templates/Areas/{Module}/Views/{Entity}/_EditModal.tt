@@ -1,0 +1,62 @@
+﻿<#@ template language="C#" hostSpecific="true" debug="false" #>
+<#@ output extension=".cshtml" #>
+<# 
+	EntityHost host = (EntityHost)(Host); 
+	EntityInfo entity = host.Entity;	
+	string nameSpace = host.GetString("NameSpace");
+	string className = host.GetString("ClassName");	
+	string camelClassName = StringHelper.InitialToLower(className);
+	string moduleName = host.GetString("ModuleName");
+	string baseNameSpace = host.GetString("BaseNameSpace");	
+	List<string> excludeFields = new List<string> { "Id", "TenantId", "Creator", "CreationTime", "IsDeleted", "Deleter", "DeletionTime", "LastModifier", "LastModificationTime" };
+#>
+@using <#= baseNameSpace #>.Web.Models.Common.Modals
+@using System.Collections.Generic
+@using <#= baseNameSpace #>
+@using <#= baseNameSpace #>.Web.Views.Shared.Components.DatePicker
+@using <#= baseNameSpace #>.Web.Views.Shared.Components.DataConfigSelector
+@model <#= baseNameSpace #>.Web.Areas.<#= moduleName #>.Models.<#= className #>ViewModel
+@{
+    Layout = "~/Views/Shared/_Modal.cshtml";
+    ViewBag.ModalTitle = L("Edit<#= className #>");
+}
+<form name="<#= className #>EditForm" role="form" novalidate class="form-validation form-horizontal">
+	<input type="hidden" name="Id" value="@Model.<#= className #>.Id" />
+		<# foreach (FieldInfo c in entity.Fields)
+		{
+			if(!excludeFields.Contains(c.Name)) {
+      		 if(c.ShortTypeName.ToLower().Contains("bool")){ #>
+	<div class="col-md-6">
+        <div class="form-group">
+            <div class="col-md-12 checkbox">
+                <input type="checkbox" name="<#= c.Name #>" value="true" class="filled-in" id="<#= c.Name #>" @((Model.<#= className #>.<#= c.Name #> ?? false) ? "checked" : "") />
+                <label for="<#= c.Name #>"> @L("<#= c.Name #>") </label>
+			</div>
+        </div>
+    </div><# } 
+		else if (c.ShortTypeName.ToLower().Contains("datetime")){#>
+	<div class="col-md-6">
+        <div class="form-group">
+             <label class="col-md-4 control-label">@L("<#= c.Name #>")</label>
+            <div class="col-md-8">
+                @await Component.InvokeAsync(typeof(DatePickerViewComponent), new { tagName = "<#= c.Name #>", value = Model.<#= className #>.<#= c.Name #>?.ToShortDateString() })
+            </div>
+        </div>
+    </div><# }
+		else {#>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="col-md-4 control-label">@L("<#= c.Name #>")<#=c.Required==true?"<span style=\"color:red;\">*</span>":""#></label>
+            <div class="col-md-8">
+                <div class="form-line">
+                    <input class="form-control" name="<#= c.Name #>"  value="@Model.<#= className #>.<#= c.Name #>" type="<#= (c.ShortTypeName.ToLower().Contains("int") || c.ShortTypeName.ToLower().Contains("decimal"))?"number":"text" #>" <#=c.MaxLength.HasValue?"maxlength=\""+c.MaxLength.Value.ToString()+"\"":""#> <#=c.Required==true?"required":""#>   >
+                </div>
+            </div>
+        </div>
+    </div><# }}} #>    
+</form>
+@section modalfooter
+    {
+    <button type="button" class="btn btn-primary save-button waves-effect">@L("Save")</button>
+}
+<script src="~/view-resources/<#= moduleName #>/<#= className #>/_EditModal.js" asp-append-version="true"></script>

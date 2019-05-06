@@ -1,0 +1,86 @@
+﻿<#@ template language="C#" hostSpecific="true" debug="false" #>
+<#@ output extension=".cshtml" #>
+<# 
+	EntityHost host = (EntityHost)(Host); 
+	EntityInfo entity = host.Entity;	
+	string nameSpace = host.GetString("NameSpace");
+	string className = host.GetString("ClassName");	
+	string camelClassName = StringHelper.InitialToLower(className);
+	string moduleName = host.GetString("ModuleName");
+	string baseNameSpace = host.GetString("BaseNameSpace");	
+	List<string> excludeFields = new List<string> { "Id", "TenantId", "Creator", "CreationTime", "IsDeleted", "Deleter", "DeletionTime", "LastModifier", "LastModificationTime" };
+#>
+@using <#= baseNameSpace #>.Web.Startup
+@using <#= baseNameSpace #>
+@using <#= baseNameSpace #>.Web.Views.Shared.Components.DatePicker
+@using <#= baseNameSpace #>.Web.Views.Shared.Components.CommonModal
+@{
+    ViewData["Title"] = "Add<#= className #>";
+    ViewBag.CurrentPageName = "<#= moduleName #>.<#= className #>";
+}
+@section scripts
+    {
+    <environment names="Development">
+        <script src="~/view-resources/<#= moduleName #>/<#= className #>/Add.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/view-resources/<#= moduleName #>/<#= className #>/Add.min.js" asp-append-version="true"></script>
+    </environment>
+}
+
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    @L("Add<#= className #>")
+                </h2>   
+            </div>
+            <div class="panel-body">
+				<form name="<#= className #>CreateForm" role="form" novalidate class="form-validation form-horizontal">
+						<# foreach (FieldInfo c in entity.Fields)
+						{
+							if(!excludeFields.Contains(c.Name)) {
+      						 if(c.ShortTypeName.ToLower().Contains("bool")){ #>
+					<div class="col-md-6">
+						<div class="form-group">
+							<div class="col-md-12 checkbox">
+								<input type="checkbox" name="<#= c.Name #>" value="true" class="filled-in" id="<#= c.Name #>" />
+								<label for="<#= c.Name #>"> @L("<#= c.Name #>") </label>
+							</div>
+						</div>
+					</div><# } 
+						else if (c.ShortTypeName.ToLower().Contains("datetime")){#>
+					<div class="col-md-6">
+						<div class="form-group">
+							 <label class="col-md-4 control-label">@L("<#= c.Name #>")</label>
+							<div class="col-md-8">
+								@await Component.InvokeAsync(typeof(DatePickerViewComponent), new { tagName = "<#= c.Name #>", value = "" })
+							</div>
+						</div>
+					</div><# }
+						else {#>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label class="col-md-4 control-label">@L("<#= c.Name #>")<#=c.Required==true?"<span style=\"color:red;\">*</span>":""#></label>
+							<div class="col-md-8">
+								<div class="form-line">
+									<input class="form-control" name="<#= c.Name #>" type="<#= (c.ShortTypeName.ToLower().Contains("int") || c.ShortTypeName.ToLower().Contains("decimal"))?"number":"text" #>" <#=c.MaxLength.HasValue?"maxlength=\""+c.MaxLength.Value.ToString()+"\"":""#> <#=c.Required==true?"required":""#>   >
+								</div>
+							</div>
+						</div>
+					</div><# }}} #>   
+					<div class="col-md-12">
+						<div class="form-group">
+							<div class="col-md-6 pull-right">                            
+								<button type="button" class="btn btn-primary save-button waves-effect m-r-50">@L("Save")</button>
+								<button type="button" class="btn btn-default close-button waves-effect m-r-50">@L("Close")</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+        </div>
+    </div>
+</div>
