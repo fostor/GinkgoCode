@@ -63,6 +63,12 @@
     <Compile Include="GenCodeForm.Designer.cs">
       <DependentUpon>GenCodeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GenEntityForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GenEntityForm.Designer.cs">
+      <DependentUpon>GenEntityForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="GinkgoCode\Templates\Application\{Module}\Dto\{Entity}Dto.cs">
       <DependentUpon>{Entity}Dto.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -410,6 +416,9 @@
   <ItemGroup>
     <EmbeddedResource Include="GenCodeForm.resx">
       <DependentUpon>GenCodeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GenEntityForm.resx">
+      <DependentUpon>GenEntityForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>

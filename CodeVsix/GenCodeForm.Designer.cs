@@ -42,12 +42,14 @@
             this.rtbInfo = new System.Windows.Forms.RichTextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.btnGenEntityClass = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.btnGenEntityClass);
             this.panel1.Controls.Add(this.btnGenCode);
             this.panel1.Controls.Add(this.ddlGenType);
             this.panel1.Controls.Add(this.btnSelFile);
@@ -171,6 +173,16 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // btnGenEntityClass
+            // 
+            this.btnGenEntityClass.Location = new System.Drawing.Point(609, 102);
+            this.btnGenEntityClass.Name = "btnGenEntityClass";
+            this.btnGenEntityClass.Size = new System.Drawing.Size(148, 23);
+            this.btnGenEntityClass.TabIndex = 5;
+            this.btnGenEntityClass.Text = "实体类生成工具";
+            this.btnGenEntityClass.UseVisualStyleBackColor = true;
+            this.btnGenEntityClass.Click += new System.EventHandler(this.btnGenEntityClass_Click);
+            // 
             // GenCodeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -203,5 +215,6 @@
         private System.Windows.Forms.RichTextBox rtbInfo;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button btnGenEntityClass;
     }
 }

@@ -46,6 +46,16 @@ namespace Fostor.CodeVsix
             File.WriteAllText(outputFilePath, outputContent, Encoding.UTF8);
         }
 
+        public static void GenEntityCode(string baseFolder, EntityInfo entity)
+        {
+            var template = @"Core\{Module}\{Entity}.tt.cs";
+            var templatePath = Path.Combine(baseFolder, template.Replace(".cs", ""));
+            var outputFilePath = Path.Combine(baseFolder.Substring(0, baseFolder.LastIndexOf(@"\")) + @"\GenCode\", template.Replace("{Module}", entity.ModuleName).Replace("{Entity}", entity.Name).Replace(".tt", ""));
+            var folder = outputFilePath.Substring(0, outputFilePath.LastIndexOf('\\'));
+            Directory.CreateDirectory(folder);
+            GenCode(entity, templatePath, outputFilePath);
+        }
+
         public static void GenApplicationCode(string baseFolder,EntityInfo entity)
         {
             var templates = new[] {

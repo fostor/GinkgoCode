@@ -100,10 +100,10 @@ namespace Fostor.CodeVsix
                 string ns = regNS.Match(modelContent).Value.Replace("namespace", "").Trim();
                 //class
                 Regex regClass = new Regex(@"^((\s)*)(.+)class(\b)(.+)$", RegexOptions.Multiline);
-                string cls = regClass.Match(modelContent).Value.Replace(" public ", " ").Replace(" class ", " ").Trim();
+                string cls = regClass.Match(modelContent).Value.Replace("public ", " ").Replace(" class ", " ").Trim();
                 if (cls.IndexOf(':') > 0)
                 {
-                    cls = cls.Substring(0, cls.IndexOf(':')); //去掉继承的基类
+                    cls = cls.Substring(0, cls.IndexOf(':')).Trim(); //去掉继承的基类
                 }
                 //fields
                 string fds = modelContent.Substring(modelContent.IndexOf("class "));
@@ -148,6 +148,18 @@ namespace Fostor.CodeVsix
             }
 
             return entity;
+        }
+
+        private void btnGenEntityClass_Click(object sender, EventArgs e)
+        {
+            string baseFolder = txtFolderRoot.Text.Trim();            
+            if (baseFolder.IndexOf(@"\") < 1)
+            {
+                MessageBox.Show("请选择模板文件根目录,再打开实体类生成工具");
+                return;
+            }
+            GenEntityForm entityForm = new GenEntityForm(baseFolder);
+            entityForm.Show();
         }
     }
 }
