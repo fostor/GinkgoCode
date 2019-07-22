@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
-using System.Text.RegularExpressions;
 
 namespace Fostor.CodeVsix
 {
@@ -36,9 +36,9 @@ namespace Fostor.CodeVsix
                 txtEntityPath.Text = openFileDialog1.FileName;
             }
         }
-      
+
         private void btnGenCode_Click(object sender, EventArgs e)
-        {            
+        {
             try
             {
                 string baseFolder = txtFolderRoot.Text.Trim();
@@ -57,8 +57,8 @@ namespace Fostor.CodeVsix
                 {
                     MessageBox.Show("请选择生成代码类别");
                     return;
-                }              
-                
+                }
+
                 EntityInfo entity = GetEntity(entityPath);
                 if (ddlGenType.SelectedIndex == 0)
                 {
@@ -78,7 +78,7 @@ namespace Fostor.CodeVsix
                 {
                     //MessageBox.Show("Case2Area");
                     rtbInfo.AppendText(DateTime.Now.ToLongTimeString() + "  开始生成新开页面的增删改查界面代码..." + Environment.NewLine);
-                    EntityEngine.GenAreasCode(baseFolder, entity);
+                    EntityEngine.GenAreasCode(baseFolder, entity, 1);
                     rtbInfo.AppendText(DateTime.Now.ToLongTimeString() + "  完成生成新开页面的增删改查界面代码。" + Environment.NewLine);
                 }
             }
@@ -92,7 +92,7 @@ namespace Fostor.CodeVsix
         {
             EntityInfo entity = new EntityInfo();
             if (File.Exists(entityFilePath))
-            {                
+            {
                 string modelContent = File.ReadAllText(entityFilePath, Encoding.UTF8);
                 modelContent = modelContent.Substring(modelContent.IndexOf("namespace "));
                 //namespace
@@ -152,7 +152,7 @@ namespace Fostor.CodeVsix
 
         private void btnGenEntityClass_Click(object sender, EventArgs e)
         {
-            string baseFolder = txtFolderRoot.Text.Trim();            
+            string baseFolder = txtFolderRoot.Text.Trim();
             if (baseFolder.IndexOf(@"\") < 1)
             {
                 MessageBox.Show("请选择模板文件根目录,再打开实体类生成工具");
