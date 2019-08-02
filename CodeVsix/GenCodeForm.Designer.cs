@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnGenEntityClass = new System.Windows.Forms.Button();
             this.btnGenCode = new System.Windows.Forms.Button();
             this.ddlGenType = new System.Windows.Forms.ComboBox();
             this.btnSelFile = new System.Windows.Forms.Button();
@@ -42,7 +43,6 @@
             this.rtbInfo = new System.Windows.Forms.RichTextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.btnGenEntityClass = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -65,6 +65,16 @@
             this.panel1.Size = new System.Drawing.Size(800, 153);
             this.panel1.TabIndex = 0;
             // 
+            // btnGenEntityClass
+            // 
+            this.btnGenEntityClass.Location = new System.Drawing.Point(609, 102);
+            this.btnGenEntityClass.Name = "btnGenEntityClass";
+            this.btnGenEntityClass.Size = new System.Drawing.Size(148, 23);
+            this.btnGenEntityClass.TabIndex = 5;
+            this.btnGenEntityClass.Text = "实体类生成工具";
+            this.btnGenEntityClass.UseVisualStyleBackColor = true;
+            this.btnGenEntityClass.Click += new System.EventHandler(this.btnGenEntityClass_Click);
+            // 
             // btnGenCode
             // 
             this.btnGenCode.Location = new System.Drawing.Point(428, 102);
@@ -82,7 +92,8 @@
             this.ddlGenType.Items.AddRange(new object[] {
             "应用服务层模块代码",
             "弹窗风格的增删改查界面",
-            "新开页面的增删改查界面"});
+            "新开页面的增删改查界面",
+            "混合风格的增删改查界面"});
             this.ddlGenType.Location = new System.Drawing.Point(139, 102);
             this.ddlGenType.Name = "ddlGenType";
             this.ddlGenType.Size = new System.Drawing.Size(253, 23);
@@ -172,16 +183,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // btnGenEntityClass
-            // 
-            this.btnGenEntityClass.Location = new System.Drawing.Point(609, 102);
-            this.btnGenEntityClass.Name = "btnGenEntityClass";
-            this.btnGenEntityClass.Size = new System.Drawing.Size(148, 23);
-            this.btnGenEntityClass.TabIndex = 5;
-            this.btnGenEntityClass.Text = "实体类生成工具";
-            this.btnGenEntityClass.UseVisualStyleBackColor = true;
-            this.btnGenEntityClass.Click += new System.EventHandler(this.btnGenEntityClass_Click);
             // 
             // GenCodeForm
             // 

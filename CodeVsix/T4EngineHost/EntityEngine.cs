@@ -98,11 +98,23 @@ namespace Fostor.CodeVsix
                     , @"wwwroot\view-resources\{Module}\{Entity}\Edit.tt.js"
                     , @"wwwroot\view-resources\{Module}\{Entity}\Add.tt.js"
                 };
+            }else if(caseType == 2)
+            {
+                templates = new[] {
+                    @"Areas\{Module}\Controllers\{Entity}Controller3.tt.cs"
+                    ,@"Areas\{Module}\Models\{Entity}ViewModel.tt.cs"
+                    , @"Areas\{Module}\Views\{Entity}\Index3.tt.cshtml"
+                    , @"Areas\{Module}\Views\{Entity}\Edit.tt.cshtml"
+                    , @"Areas\{Module}\Views\{Entity}\_AddModal.tt.cshtml"
+                    , @"wwwroot\view-resources\{Module}\{Entity}\Index3.tt.js"
+                    , @"wwwroot\view-resources\{Module}\{Entity}\Edit.tt.js"
+                    , @"wwwroot\view-resources\{Module}\{Entity}\_AddModal3.tt.js"
+                };
             }
             foreach (var template in templates)
             {
                 var templateFilePath = Path.Combine(baseFolder + @"\", template.Replace(".cshtml", "").Replace(".js", "").Replace(".cs", ""));
-                var outputFilePath = Path.Combine(baseFolder.Substring(0, baseFolder.LastIndexOf(@"\")) + @"\GenCode\", template.Replace("{Module}", entity.ModuleName).Replace("{Entity}", entity.Name).Replace(".tt", "").Replace("2.","."));
+                var outputFilePath = Path.Combine(baseFolder.Substring(0, baseFolder.LastIndexOf(@"\")) + @"\GenCode\", template.Replace("{Module}", entity.ModuleName).Replace("{Entity}", entity.Name).Replace(".tt", "").Replace("2.",".").Replace("3.", "."));
                 var folder = outputFilePath.Substring(0, outputFilePath.LastIndexOf('\\'));
                 Directory.CreateDirectory(folder);
                 GenCode(entity, templateFilePath, outputFilePath);

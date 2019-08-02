@@ -68,18 +68,22 @@ namespace Fostor.CodeVsix
                     rtbInfo.AppendText(DateTime.Now.ToLongTimeString() + "  完成生成应用服务层模块代码。" + Environment.NewLine);
                 }
                 if (ddlGenType.SelectedIndex == 1)
-                {
-                    //MessageBox.Show("Case1Area");
+                {                    
                     rtbInfo.AppendText(DateTime.Now.ToLongTimeString() + "  开始生成弹窗风格的增删改查界面代码..." + Environment.NewLine);
                     EntityEngine.GenAreasCode(baseFolder, entity);
                     rtbInfo.AppendText(DateTime.Now.ToLongTimeString() + "  完成生成弹窗风格的增删改查界面代码。" + Environment.NewLine);
                 }
                 if (ddlGenType.SelectedIndex == 2)
-                {
-                    //MessageBox.Show("Case2Area");
+                {                    
                     rtbInfo.AppendText(DateTime.Now.ToLongTimeString() + "  开始生成新开页面的增删改查界面代码..." + Environment.NewLine);
                     EntityEngine.GenAreasCode(baseFolder, entity, 1);
                     rtbInfo.AppendText(DateTime.Now.ToLongTimeString() + "  完成生成新开页面的增删改查界面代码。" + Environment.NewLine);
+                }
+                if (ddlGenType.SelectedIndex == 3)
+                {                    
+                    rtbInfo.AppendText(DateTime.Now.ToLongTimeString() + "  开始生成混合风格的增删改查界面代码..." + Environment.NewLine);
+                    EntityEngine.GenAreasCode(baseFolder, entity, 2);
+                    rtbInfo.AppendText(DateTime.Now.ToLongTimeString() + "  完成生成混合风格的增删改查界面代码。" + Environment.NewLine);
                 }
             }
             catch (Exception ex)
