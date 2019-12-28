@@ -1,0 +1,2 @@
+D:\001_Source\Repos\GinkgoCode\CodeGen\obj\Release\CodeGen.csprojAssemblyReference.cache
+D:\001_Source\Repos\GinkgoCode\CodeGen\obj\Release\CodeGen.exe.config
